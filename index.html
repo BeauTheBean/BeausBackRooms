@@ -2,7 +2,6 @@
 <html lang="en-us">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>BeausHorrorGame</title>
 
     <style>
@@ -25,38 +24,46 @@
 </head>
 
 <body>
-    <div id="unity-container">
-        <canvas id="unity-canvas"></canvas>
-    </div>
+<div id="unity-container">
+    <canvas id="unity-canvas"></canvas>
+</div>
 
-    <script>
-        const canvas = document.querySelector("#unity-canvas");
+<script>
+const canvas = document.getElementById("unity-canvas");
 
-        const buildBase = "https://cdn.jsdelivr.net/gh/BeauTheBean/BeausBackRooms@latest/Build/";
+// 🔥 IMPORTANT: correct jsDelivr structure
+const base = "https://cdn.jsdelivr.net/gh/BeauTheBean/BeausBackRooms@main/Build/";
 
-        const config = {
-            dataUrl: buildBase + "BeausHorrorGame.data.unityweb",
-            frameworkUrl: buildBase + "BeausHorrorGame.framework.js.unityweb",
-            codeUrl: buildBase + "BeausHorrorGame.wasm.unityweb",
-            streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/BeauTheBean/BeausBackRooms@latest/StreamingAssets",
-            companyName: "BeauTheBean",
-            productName: "BeausHorrorGame",
-            productVersion: "0.1"
-        };
+const config = {
+    dataUrl: base + "BeausHorrorGame.data.unityweb",
+    frameworkUrl: base + "BeausHorrorGame.framework.js.unityweb",
+    codeUrl: base + "BeausHorrorGame.wasm.unityweb",
+    streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/BeauTheBean/BeausBackRooms@main/StreamingAssets",
+    companyName: "BeauTheBean",
+    productName: "BeausHorrorGame",
+    productVersion: "0.1"
+};
 
-        const loaderUrl = buildBase + "BeausHorrorGame.loader.js";
+const loaderUrl = base + "BeausHorrorGame.loader.js";
 
-        const script = document.createElement("script");
-        script.src = loaderUrl;
+function loadScript(url, callback) {
+    const s = document.createElement("script");
+    s.src = url;
+    s.onload = callback;
+    document.body.appendChild(s);
+}
 
-        script.onload = () => {
-            createUnityInstance(canvas, config).catch((e) => {
-                console.error(e);
-                alert("Game failed to load");
-            });
-        };
+loadScript(loaderUrl, () => {
+    createUnityInstance(canvas, config)
+        .then(() => {
+            console.log("Unity loaded");
+        })
+        .catch((err) => {
+            console.error(err);
+            alert("Game failed to load: " + err);
+        });
+});
+</script>
 
-        document.body.appendChild(script);
-    </script>
 </body>
 </html>
